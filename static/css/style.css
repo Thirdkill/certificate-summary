@@ -1,0 +1,265 @@
+/* ==========================================================================
+   Certificate OCR System — Design System
+   Palette: registry ink + parchment + scanner teal + seal gold
+   Type: Fraunces (display/certificate) · Inter (UI) · IBM Plex Mono (data)
+   Signature element: the scanner bed with a sweeping laser beam, and the
+   "ledger row" result layout with dotted leaders, echoing an official
+   certificate registry entry.
+   ========================================================================== */
+
+:root{
+  --ink:            #16213D;
+  --ink-soft:       #46527A;
+  --parchment:      #FAF6EC;
+  --parchment-deep: #F0E9D8;
+  --line:           #DED3B8;
+  --scan:           #1FA6A0;
+  --scan-soft:      #E4F5F3;
+  --gold:           #A8791F;
+  --danger:         #B23A2E;
+
+  --font-display: 'Fraunces', Georgia, serif;
+  --font-body:    'Inter', -apple-system, sans-serif;
+  --font-mono:    'IBM Plex Mono', monospace;
+
+  --radius: 3px;
+  --shadow: 0 1px 2px rgba(22,33,61,0.06), 0 8px 24px rgba(22,33,61,0.08);
+}
+
+*{ box-sizing:border-box; }
+html{ scroll-behavior:smooth; }
+
+body{
+  margin:0;
+  background:var(--parchment);
+  color:var(--ink);
+  font-family:var(--font-body);
+  line-height:1.5;
+  -webkit-font-smoothing:antialiased;
+}
+
+/* faint registry ruled-lines watermark across the whole page */
+.registry-lines{
+  position:fixed; inset:0; z-index:0; pointer-events:none;
+  background-image:repeating-linear-gradient(
+    to bottom, transparent 0 47px, var(--line) 47px 48px
+  );
+  opacity:0.35;
+}
+
+main{ position:relative; z-index:1; max-width:920px; margin:0 auto; padding:0 28px 96px; }
+
+a{ color:var(--scan); }
+
+::selection{ background:var(--scan); color:#fff; }
+
+@media (prefers-reduced-motion: reduce){
+  *{ animation-duration:0.01ms !important; animation-iteration-count:1 !important; transition-duration:0.01ms !important; }
+}
+
+/* ---------------------------- Top bar ---------------------------- */
+.topbar{
+  position:relative; z-index:2;
+  display:flex; align-items:center; justify-content:space-between;
+  max-width:920px; margin:0 auto; padding:28px 28px 20px;
+  border-bottom:1px solid var(--line);
+}
+.topbar__mark{ display:flex; align-items:center; gap:12px; }
+.topbar__seal{
+  width:40px; height:40px; border-radius:50%;
+  border:1.5px solid var(--gold); color:var(--gold);
+  display:flex; align-items:center; justify-content:center;
+  font-family:var(--font-display); font-weight:600; font-size:14px;
+  position:relative;
+}
+.topbar__seal::after{
+  content:""; position:absolute; inset:-5px; border-radius:50%;
+  border:1px dotted var(--gold); opacity:0.6;
+}
+.topbar__title{ margin:0; font-family:var(--font-display); font-weight:600; font-size:17px; }
+.topbar__subtitle{ margin:0; font-size:12px; color:var(--ink-soft); font-family:var(--font-mono); }
+
+.topbar__nav{ display:flex; gap:4px; }
+.navlink{
+  font-family:var(--font-body); font-size:13px; font-weight:600; color:var(--ink-soft);
+  background:none; border:none; padding:8px 14px; cursor:pointer; border-radius:var(--radius);
+  transition:color .15s, background .15s;
+}
+.navlink:hover{ color:var(--ink); background:var(--parchment-deep); }
+.navlink.is-active{ color:var(--scan); background:var(--scan-soft); }
+.navlink:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible{
+  outline:2px solid var(--scan); outline-offset:2px;
+}
+
+/* ---------------------------- Views ---------------------------- */
+.view{ display:none; padding-top:40px; }
+.view.is-active{ display:block; animation:fade-up .35s ease both; }
+@keyframes fade-up{ from{ opacity:0; transform:translateY(6px);} to{opacity:1; transform:none;} }
+
+.view-header{ display:flex; align-items:flex-end; justify-content:space-between; gap:16px; margin-bottom:24px; flex-wrap:wrap; }
+
+/* ---------------------------- Hero ---------------------------- */
+.hero{
+  padding-top:1px; display:flex; justify-content:space-between; gap:40px;
+  flex-wrap:wrap; align-items:flex-end; margin-bottom:36px;
+}
+.hero__eyebrow{
+  font-family:var(--font-mono); font-size:11px; letter-spacing:0.14em; text-transform:uppercase;
+  color:var(--scan); margin:0 0 10px;
+}
+.hero h1{
+  font-family:var(--font-display); font-weight:500; font-size:clamp(30px,4.4vw,44px);
+  line-height:1.08;  margin:0 0 14px; max-width:100ch; 
+}
+.hero__lede{ max-width:46ch; color:var(--ink-soft); font-size:15px; margin:0; }
+.hero__text{ flex:1; min-width:280px; }
+
+.hero__controls{ display:flex; flex-direction:column; gap:16px; min-width:200px; }
+.field{ display:flex; flex-direction:column; gap:6px; font-size:12px; font-weight:600; color:var(--ink-soft); }
+.field select{
+  font-family:var(--font-mono); font-size:13px; padding:9px 10px; border:1px solid var(--line);
+  border-radius:var(--radius); background:#fff; color:var(--ink); cursor:pointer;
+}
+.field--toggle{ flex-direction:row; align-items:center; justify-content:space-between; position:relative; }
+.field--toggle input{ position:absolute; opacity:0; width:36px; height:20px; margin:0; cursor:pointer; }
+.toggle-pill{
+  width:36px; height:20px; border-radius:20px; background:var(--line); position:relative; flex-shrink:0;
+  transition:background .18s;
+}
+.toggle-pill::after{
+  content:""; position:absolute; top:2px; left:2px; width:16px; height:16px; border-radius:50%;
+  background:#fff; box-shadow:var(--shadow); transition:transform .18s;
+}
+.field--toggle input:checked + .toggle-pill{ background:var(--scan); }
+.field--toggle input:checked + .toggle-pill::after{ transform:translateX(16px); }
+
+/* ---------------------------- Scanner (signature element) ---------------------------- */
+.scanner{ margin-bottom:8px; }
+.scanner__bed{
+  position:relative; overflow:hidden;
+  border:1.5px dashed var(--ink); border-radius:6px;
+  background:#fff;
+  padding:56px 24px; text-align:center; cursor:pointer;
+  color:var(--ink-soft);
+  transition:border-color .15s, background .15s;
+}
+.scanner__bed:hover{ border-color:var(--scan); background:var(--scan-soft); }
+.scanner.is-dragover .scanner__bed{ border-color:var(--scan); background:var(--scan-soft); }
+.scanner.is-busy .scanner__bed{ cursor:progress; }
+
+.scanner__icon{ width:44px; height:44px; color:var(--ink); margin-bottom:14px; }
+.scanner__label{ margin:0 0 4px; font-weight:600; color:var(--ink); font-size:15px; }
+.scanner__meta{ margin:0; font-family:var(--font-mono); font-size:11.5px; color:var(--ink-soft); }
+
+.scanner__beam{
+  position:absolute; left:0; right:0; top:0; height:3px;
+  background:linear-gradient(90deg, transparent, var(--scan) 20%, var(--scan) 80%, transparent);
+  box-shadow:0 0 12px 2px var(--scan);
+  opacity:0; pointer-events:none;
+}
+.scanner.is-busy .scanner__beam{
+  opacity:1; animation:sweep 1.1s ease-in-out infinite;
+}
+@keyframes sweep{
+  0%{ top:0; }
+  50%{ top:calc(100% - 3px); }
+  100%{ top:0; }
+}
+
+/* ---------------------------- Results "ledger" ---------------------------- */
+.results{ margin-top:40px; }
+.results__sheet{
+  background:#fff; border:1px solid var(--line); border-radius:6px;
+  box-shadow:var(--shadow); padding:32px 32px 26px; position:relative;
+}
+.results__sheet::before{
+  content:""; position:absolute; top:14px; right:14px; bottom:14px; left:14px;
+  border:1px solid var(--parchment-deep); pointer-events:none; border-radius:3px;
+}
+
+.ledger-head{ display:flex; justify-content:space-between; align-items:flex-start; gap:16px; margin-bottom:22px; flex-wrap:wrap; }
+.ledger-head h3{ font-family:var(--font-display); font-size:22px; font-weight:600; margin:0 0 4px; }
+.ledger-head .file-tag{ font-family:var(--font-mono); font-size:11.5px; color:var(--ink-soft); }
+
+.confidence-badge{
+  display:flex; flex-direction:column; align-items:flex-end; gap:6px; min-width:140px;
+}
+.confidence-badge__label{ font-family:var(--font-mono); font-size:10.5px; text-transform:uppercase; letter-spacing:.08em; color:var(--ink-soft); }
+.confidence-bar{ width:140px; height:6px; border-radius:4px; background:var(--parchment-deep); overflow:hidden; }
+.confidence-bar__fill{ height:100%; background:var(--scan); border-radius:4px; transition:width .5s ease; }
+.confidence-badge__value{ font-family:var(--font-mono); font-size:13px; font-weight:600; }
+
+.ledger-row{
+  display:grid; grid-template-columns:150px 1fr auto; align-items:baseline; gap:8px;
+  padding:9px 0; border-bottom:1px dotted var(--line);
+}
+.ledger-row:last-of-type{ border-bottom:none; }
+.ledger-row__label{ font-family:var(--font-mono); font-size:11.5px; text-transform:uppercase; letter-spacing:.06em; color:var(--ink-soft); }
+.ledger-row__leader{ border-bottom:1px dotted var(--line); align-self:end; margin-bottom:5px; }
+.ledger-row__value{ font-weight:500; text-align:right; max-width:56ch; word-break:break-word; }
+.ledger-row__value.is-empty{ color:#B7ADA0; font-style:italic; font-weight:400; }
+
+.ledger-actions{ display:flex; gap:10px; margin-top:22px; flex-wrap:wrap; }
+
+.raw-text-toggle{
+  margin-top:20px; border-top:1px solid var(--line); padding-top:14px;
+}
+.raw-text-toggle summary{ cursor:pointer; font-size:12.5px; font-weight:600; color:var(--ink-soft); font-family:var(--font-mono); }
+.raw-text-toggle pre{
+  margin-top:12px; background:var(--parchment); border:1px solid var(--line); border-radius:4px;
+  padding:14px; font-family:var(--font-mono); font-size:12px; white-space:pre-wrap; max-height:260px; overflow:auto;
+}
+
+/* ---------------------------- Buttons ---------------------------- */
+.btn{
+  font-family:var(--font-body); font-weight:600; font-size:13px; cursor:pointer;
+  padding:10px 16px; border-radius:var(--radius); border:1px solid var(--ink); background:var(--ink); color:#fff;
+  transition:transform .1s, opacity .15s;
+}
+.btn:hover{ opacity:0.88; }
+.btn:active{ transform:translateY(1px); }
+.btn--ghost{ background:none; color:var(--ink); border-color:var(--line); }
+.btn--ghost:hover{ background:var(--parchment-deep); opacity:1; }
+.btn--small{ padding:7px 12px; font-size:12px; }
+
+/* ---------------------------- Batch table / Registry / Audit ---------------------------- */
+.section-title{ font-family:var(--font-display); font-size:20px; font-weight:600; margin:0 0 14px; }
+
+.batch-table, .registry-table{
+  width:100%; border-collapse:collapse; background:#fff; border:1px solid var(--line); border-radius:6px; overflow:hidden;
+  font-size:13px;
+}
+.batch-table th, .registry-table th{
+  text-align:left; font-family:var(--font-mono); font-size:10.5px; text-transform:uppercase; letter-spacing:.06em;
+  color:var(--ink-soft); background:var(--parchment-deep); padding:10px 14px; font-weight:600;
+}
+.batch-table td, .registry-table td{ padding:11px 14px; border-top:1px solid var(--line); vertical-align:middle; }
+.empty-row td{ color:var(--ink-soft); font-style:italic; text-align:center; padding:26px; }
+
+.status-pill{
+  display:inline-block; padding:3px 9px; border-radius:20px; font-family:var(--font-mono); font-size:10.5px; font-weight:600;
+}
+.status-pill--success{ background:var(--scan-soft); color:var(--scan); }
+.status-pill--failed{ background:#F7E4E1; color:var(--danger); }
+
+/* ---------------------------- Toast ---------------------------- */
+.toast{
+  position:fixed; bottom:24px; left:50%; transform:translateX(-50%) translateY(20px);
+  background:var(--ink); color:#fff; padding:12px 20px; border-radius:6px; font-size:13px;
+  opacity:0; pointer-events:none; transition:opacity .25s, transform .25s; z-index:50; box-shadow:var(--shadow);
+}
+.toast.is-visible{ opacity:1; transform:translateX(-50%) translateY(0); }
+.toast.is-error{ background:var(--danger); }
+
+/* ---------------------------- Standalone results page ---------------------------- */
+.standalone-results{ max-width:600px; margin:80px auto; padding:0 24px; font-family:var(--font-body); }
+
+/* ---------------------------- Responsive ---------------------------- */
+@media (max-width:640px){
+  .topbar{ flex-direction:column; align-items:flex-start; gap:14px; }
+  .hero{ flex-direction:column; align-items:flex-start; }
+  .ledger-row{ grid-template-columns:1fr; row-gap:2px; }
+  .ledger-row__leader{ display:none; }
+  .ledger-row__value{ text-align:left; }
+  .confidence-badge{ align-items:flex-start; }
+}

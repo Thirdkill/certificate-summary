@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/png" href="/static/icon.png">
+<title>Certificate OCR System · Teerop AI &amp; ML Internship</title>
+<link rel="stylesheet" href="/static/css/style.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<div class="registry-lines" aria-hidden="true"></div>
+
+<header class="topbar">
+  <div class="topbar__mark">
+    <span class="topbar__seal">CO</span>
+    <div>
+      <p class="topbar__title">Certificate OCR System</p>
+      <p class="topbar__subtitle">Tesseract-based document processing</p>
+    </div>
+  </div>
+  <nav class="topbar__nav">
+    <button class="navlink is-active" data-view="scan">Scan</button>
+    <button class="navlink" data-view="registry">Registry</button>
+    <button class="navlink" data-view="audit">Audit Trail</button>
+  </nav>
+</header>
+
+<main>
+
+  <!-- ============================ SCAN VIEW ============================ -->
+  <section id="view-scan" class="view is-active">
+
+    <section class="hero">
+      <div class="hero__text">
+        <p class="hero__eyebrow">Phase 01 — Intake</p>
+        <h1>Feed it a certificate and Get back a record.</h1>
+        <p class="hero__lede">Drop an image or PDF. The engine deskews, denoises, reads every
+          line with Tesseract, and lifts out the name, title, issuer, date, ID, grade and
+          duration — no template required.</p>
+      </div>
+
+      <div class="hero__controls">
+        <label class="field">
+          <span>OCR language</span>
+          <select id="lang-select"></select>
+        </label>
+        <label class="field field--toggle">
+          <span>Batch mode</span>
+          <input type="checkbox" id="batch-toggle">
+          <span class="toggle-pill" id="toggle-pill"></span>
+        </label>
+      </div>
+    </section>
+
+    <section class="scanner" id="dropzone">
+      <input type="file" id="file-input" accept=".jpg,.jpeg,.png,.tiff,.tif,.bmp,.webp,.pdf" hidden>
+      <div class="scanner__bed">
+        <div class="scanner__beam" id="scan-beam"></div>
+        <svg class="scanner__icon" viewBox="0 0 64 64" fill="none">
+          <rect x="10" y="8" width="44" height="52" rx="2" stroke="currentColor" stroke-width="2"/>
+          <line x1="18" y1="20" x2="46" y2="20" stroke="currentColor" stroke-width="2"/>
+          <line x1="18" y1="28" x2="46" y2="28" stroke="currentColor" stroke-width="2"/>
+          <line x1="18" y1="36" x2="36" y2="36" stroke="currentColor" stroke-width="2"/>
+          <circle cx="32" cy="48" r="6" stroke="currentColor" stroke-width="2"/>
+        </svg>
+        <p class="scanner__label" id="scanner-label">Drag a certificate here, or click to browse</p>
+        <p class="scanner__meta" id="scanner-meta">JPG · PNG · TIFF · BMP · WEBP · PDF — up to 15&nbsp;MB</p>
+      </div>
+    </section>
+
+    <section class="results" id="results" hidden>
+      <div class="results__sheet" id="results-sheet">
+        <!-- populated by JS -->
+      </div>
+    </section>
+
+    <section class="results-batch" id="results-batch" hidden>
+      <h2 class="section-title">Batch results</h2>
+      <table class="batch-table">
+        <thead>
+          <tr><th>File</th><th>Name</th><th>Title</th><th>Confidence</th><th>Status</th></tr>
+        </thead>
+        <tbody id="batch-table-body"></tbody>
+      </table>
+    </section>
+
+  </section>
+
+  <!-- ========================== REGISTRY VIEW =========================== -->
+  <section id="view-registry" class="view">
+    <div class="view-header">
+      <div>
+        <p class="hero__eyebrow">Phase 02 — Storage</p>
+        <h2>Registry of processed certificates</h2>
+      </div>
+      <button class="btn btn--ghost" id="export-excel-btn">↓ Export all to Excel</button>
+    </div>
+    <table class="registry-table">
+      <thead><tr><th>Candidate</th><th>Certificate</th><th>Processed</th><th></th></tr></thead>
+      <tbody id="registry-table-body">
+        <tr class="empty-row"><td colspan="4">No certificates processed yet.</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ============================ AUDIT VIEW ============================ -->
+  <section id="view-audit" class="view">
+    <p class="hero__eyebrow">Phase 03 — Accountability</p>
+    <h2>Audit trail</h2>
+    <p class="hero__lede">Every upload, extraction and deletion, logged automatically.</p>
+    <table class="registry-table">
+      <thead><tr><th>Timestamp</th><th>File</th><th>Action</th><th>Status</th><th>Details</th></tr></thead>
+      <tbody id="audit-table-body">
+        <tr class="empty-row"><td colspan="5">No activity yet.</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+</main>
+
+<div class="toast" id="toast"></div>
+
+<template id="tpl-field-row">
+  <div class="ledger-row">
+    <span class="ledger-row__label"></span>
+    <span class="ledger-row__leader"></span>
+    <span class="ledger-row__value"></span>
+  </div>
+</template>
+
+<script src="/static/js/app.js"></script>
+</body>
+</html>

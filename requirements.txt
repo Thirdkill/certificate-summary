@@ -1,0 +1,27 @@
+# --- Core Web Framework ---
+fastapi[all]>=0.115.0
+uvicorn>=0.30.6
+python-multipart>=0.0.9
+jinja2>=3.1.4
+
+# --- OCR & Image Processing ---
+pytesseract>=0.3.13
+opencv-python>=4.10.0.84
+pillow>=10.4.0
+numpy>=1.26.4
+
+# --- PDF Processing ---
+pdf2image>=1.17.0
+# NOTE: Poppler must be installed separately (system dependency, see README)
+
+# --- Database ---
+sqlalchemy>=2.0.35
+
+# --- Bonus Features ---
+qrcode[pil]>=7.4.2
+openpyxl>=3.1.5
+pandas>=2.2.2
+
+# --- Testing ---
+pytest>=8.3.3
+httpx>=0.27.2
